@@ -1,5 +1,12 @@
 // Splash
-window.onload=()=>setTimeout(()=>document.getElementById("splashScreen").remove(),1500);
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const splash = document.getElementById("splashScreen");
+    if (splash) {
+      splash.style.display = "none";
+    }
+  }, 1500);
+});
 
 // Navigation
 document.querySelectorAll(".tab").forEach(t=>{
