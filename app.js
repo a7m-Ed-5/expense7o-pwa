@@ -1,108 +1,119 @@
-// Splash
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    const splash = document.getElementById("splashScreen");
-    if (splash) {
-      splash.style.display = "none";
-    }
-  }, 1500);
-});
+/* =====================
+   Splash (FINAL FIX)
+===================== */
+setTimeout(() => {
+  const splash = document.getElementById("splashScreen");
+  if (splash) {
+    splash.classList.remove("show");
+    splash.classList.add("hide");
+  }
+}, 1500);
 
-// Navigation
+/* Navigation */
 document.querySelectorAll(".tab").forEach(t=>{
- t.onclick=()=>{document.querySelectorAll(".tab,.view").forEach(x=>x.classList.remove("active"));
- t.classList.add("active");
- document.getElementById("view-"+t.dataset.view).classList.add("active");};
+  t.onclick=()=>{
+    document.querySelectorAll(".tab,.view").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    document.getElementById("view-"+t.dataset.view).classList.add("active");
+  };
 });
 
-// Utils
+/* Utils */
 const today=()=>new Date().toISOString().split("T")[0];
-incomeDate.value=expenseDate.value=today();
+incomeDate.value=today();
 
-// Lock system
-const lockType=()=>localStorage.getItem("lock_type")||"pin";
+/* Lock system */
+const getLockType=()=>localStorage.getItem("lock_type")||"pin";
 if(!localStorage.getItem("app_pin"))localStorage.setItem("app_pin","1234");
 
 function showLock(){
- if(lockType()=="none")return;
- lockScreen.classList.remove("hidden");
- pinBox.classList.toggle("hidden",lockType()!="pin");
- patternBox.classList.toggle("hidden",lockType()!="pattern");
+  if(getLockType()==="none")return;
+  lockScreen.classList.remove("hidden");
+  pinBox.classList.toggle("hidden",getLockType()!=="pin");
+  patternBox.classList.toggle("hidden",getLockType()!=="pattern");
 }
 showLock();
 
 function checkPin(){
- if(pinInput.value===localStorage.getItem("app_pin"))lockScreen.classList.add("hidden");
+  if(pinInput.value===localStorage.getItem("app_pin")){
+    lockScreen.classList.add("hidden");
+  }
 }
 
 let currentPattern="";
 document.querySelectorAll(".pattern-grid div").forEach(d=>{
- d.onclick=()=>{currentPattern+=d.dataset.p;d.classList.add("active");};
+  d.onclick=()=>{currentPattern+=d.dataset.p;d.classList.add("active");};
 });
 function checkPattern(){
- if(!localStorage.getItem("app_pattern"))localStorage.setItem("app_pattern",currentPattern);
- else if(localStorage.getItem("app_pattern")==currentPattern)lockScreen.classList.add("hidden");
- currentPattern="";
- document.querySelectorAll(".pattern-grid div").forEach(d=>d.classList.remove("active"));
+  if(!localStorage.getItem("app_pattern")){
+    localStorage.setItem("app_pattern",currentPattern);
+  }else if(localStorage.getItem("app_pattern")===currentPattern){
+    lockScreen.classList.add("hidden");
+  }
+  currentPattern="";
+  document.querySelectorAll(".pattern-grid div").forEach(d=>d.classList.remove("active"));
 }
 
-function saveLockType(){localStorage.setItem("lock_type",lockType.value);alert("تم الحفظ");}
+function saveLockType(){
+  localStorage.setItem("lock_type",lockType.value);
+  alert("تم الحفظ");
+}
 
 function changePin(){
- if(oldPin.value===localStorage.getItem("app_pin")&&newPin.value===confirmNewPin.value){
-  localStorage.setItem("app_pin",newPin.value);alert("تم التغيير");
- }
+  if(oldPin.value===localStorage.getItem("app_pin")&&newPin.value===confirmNewPin.value){
+    localStorage.setItem("app_pin",newPin.value);
+    alert("تم التغيير");
+  }
 }
 
-// Income
+/* Income */
 function addIncome(){
- let l=JSON.parse(localStorage.getItem("incomes")||"[]");
- l.push({id:crypto.randomUUID(),amount:+incomeAmount.value,date:incomeDate.value});
- localStorage.setItem("incomes",JSON.stringify(l));loadIncome();loadDash();
+  let l=JSON.parse(localStorage.getItem("incomes")||"[]");
+  l.push({id:crypto.randomUUID(),amount:+incomeAmount.value,date:incomeDate.value});
+  localStorage.setItem("incomes",JSON.stringify(l));
+  loadIncome();loadDash();
 }
 function loadIncome(){
- incomeList.innerHTML="";
- JSON.parse(localStorage.getItem("incomes")||"[]").forEach(i=>{
-  incomeList.innerHTML+=`${i.amount} <button onclick="delIncome('${i.id}')">🗑️</button>`;
- });
+  incomeList.innerHTML="";
+  JSON.parse(localStorage.getItem("incomes")||"[]").forEach(i=>{
+    incomeList.innerHTML+=`${i.amount} <button onclick="delIncome('${i.id}')">🗑️</button>`;
+  });
 }
 function delIncome(id){
- let l=JSON.parse(localStorage.getItem("incomes")||"[]").filter(x=>x.id!=id);
- localStorage.setItem("incomes",JSON.stringify(l));loadIncome();loadDash();
+  let l=JSON.parse(localStorage.getItem("incomes")||"[]").filter(x=>x.id!==id);
+  localStorage.setItem("incomes",JSON.stringify(l));
+  loadIncome();loadDash();
 }
 
-// Expenses
+/* Expenses */
 function addExpense(){
- let l=JSON.parse(localStorage.getItem("expenses")||"[]");
- l.push({id:crypto.randomUUID(),name:expenseName.value,amount:+expenseAmount.value});
- localStorage.setItem("expenses",JSON.stringify(l));loadExpenses();loadDash();
+  let l=JSON.parse(localStorage.getItem("expenses")||"[]");
+  l.push({id:crypto.randomUUID(),name:expenseName.value,amount:+expenseAmount.value});
+  localStorage.setItem("expenses",JSON.stringify(l));
+  loadExpenses();loadDash();
 }
 function loadExpenses(){
- expenseList.innerHTML="";
- JSON.parse(localStorage.getItem("expenses")||"[]").forEach(e=>{
-  expenseList.innerHTML+=`${e.name}:${e.amount} <button onclick="delExpense('${e.id}')">🗑️</button>`;
- });
+  expenseList.innerHTML="";
+  JSON.parse(localStorage.getItem("expenses")||"[]").forEach(e=>{
+    expenseList.innerHTML+=`${e.name} ${e.amount} <button onclick="delExpense('${e.id}')">🗑️</button>`;
+  });
 }
 function delExpense(id){
- let l=JSON.parse(localStorage.getItem("expenses")||"[]").filter(x=>x.id!=id);
- localStorage.setItem("expenses",JSON.stringify(l));loadExpenses();loadDash();
+  let l=JSON.parse(localStorage.getItem("expenses")||"[]").filter(x=>x.id!==id);
+  localStorage.setItem("expenses",JSON.stringify(l));
+  loadExpenses();loadDash();
 }
 
-// Dashboard
+/* Dashboard */
 function loadDash(){
- let i=JSON.parse(localStorage.getItem("incomes")||"[]");
- let e=JSON.parse(localStorage.getItem("expenses")||"[]");
- sumIncome.innerText=i.reduce((a,b)=>a+b.amount,0);
- sumExpenses.innerText=e.reduce((a,b)=>a+b.amount,0);
- sumBalance.innerText=sumIncome.innerText-sumExpenses.innerText;
+  let i=JSON.parse(localStorage.getItem("incomes")||"[]");
+  let e=JSON.parse(localStorage.getItem("expenses")||"[]");
+  sumIncome.innerText=i.reduce((a,b)=>a+b.amount,0);
+  sumExpenses.innerText=e.reduce((a,b)=>a+b.amount,0);
+  sumBalance.innerText=sumIncome.innerText-sumExpenses.innerText;
 }
 
-// Excel
-function exportExcel(){
- let e=JSON.parse(localStorage.getItem("expenses")||"[]");
- let csv="Name,Amount\n";
- e.forEach(x=>csv+=`${x.name},${x.amount}\n`);
- let a=document.createElement("a");
+loadIncome();loadExpenses();loadDash();ment("a");
  a.href=URL.createObjectURL(new Blob([csv]));
  a.download="expenses.csv";a.click();
 }

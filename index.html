@@ -10,7 +10,7 @@
 <body>
 
 <!-- 🎬 Splash Screen -->
-<div id="splashScreen" class="splash">
+<div id="splashScreen" class="splash show">
   <div class="splash-box">
     <div class="splash-logo">💰</div>
     <h1>مصاريفي</h1>
@@ -56,35 +56,28 @@
 
 <main class="container">
 
-<!-- Dashboard -->
 <section id="view-dashboard" class="view active">
   <div class="grid-3">
-    <div class="stat"><span>الدخل</span><b id="sumIncome">0</b></div>
-    <div class="stat"><span>المصاريف</span><b id="sumExpenses">0</b></div>
-    <div class="stat"><span>المتبقي</span><b id="sumBalance">0</b></div>
+    <div class="stat">الدخل<br><b id="sumIncome">0</b></div>
+    <div class="stat">المصاريف<br><b id="sumExpenses">0</b></div>
+    <div class="stat">المتبقي<br><b id="sumBalance">0</b></div>
   </div>
 </section>
 
-<!-- Income -->
 <section id="view-income" class="view">
   <input id="incomeAmount" class="input" type="number" placeholder="المبلغ">
   <input id="incomeDate" class="input" type="date">
-  <input id="incomeSource" class="input" placeholder="المصدر">
   <button class="btn" onclick="addIncome()">إضافة دخل</button>
   <div id="incomeList"></div>
 </section>
 
-<!-- Expenses -->
 <section id="view-expenses" class="view">
   <input id="expenseName" class="input" placeholder="اسم المصروف">
   <input id="expenseAmount" class="input" type="number" placeholder="المبلغ">
-  <input id="expenseDate" class="input" type="date">
-  <input id="expenseCategory" class="input" placeholder="التصنيف">
   <button class="btn" onclick="addExpense()">إضافة مصروف</button>
   <div id="expenseList"></div>
 </section>
 
-<!-- Settings -->
 <section id="view-settings" class="view">
   <h3>🔐 نوع القفل</h3>
   <select id="lockType" class="input">
@@ -94,8 +87,18 @@
   </select>
   <button class="btn" onclick="saveLockType()">حفظ</button>
 
-  <h3>✏️ تغيير الرقم السري</h3>
+  <h3>✏️ تغيير PIN</h3>
   <input id="oldPin" class="input" placeholder="الحالي">
+  <input id="newPin" class="input" placeholder="الجديد">
+  <input id="confirmNewPin" class="input" placeholder="تأكيد الجديد">
+  <button class="btn" onclick="changePin()">تغيير</button>
+</section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>="input" placeholder="الحالي">
   <input id="newPin" class="input" placeholder="الجديد">
   <input id="confirmNewPin" class="input" placeholder="تأكيد الجديد">
   <button class="btn" onclick="changePin()">تغيير PIN</button>
